@@ -1,0 +1,55 @@
+# --- Environnement Virtuel ---
+venv/
+.venv/
+env/
+bin/
+lib/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.installed.cfg
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# --- Secrets et Configuration (CRITIQUE) ---
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+*.key
+
+# --- Python (Cache et Bytecode) ---
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.tox/
+.nox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+*.affect
+.ipynb_checkpoints
+
+# --- IDEs (VS Code, PyCharm, etc.) ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Système (Mac / Windows) ---
+.DS_Store
+Thumbs.db
+
+# --- Logs ---
+*.log
