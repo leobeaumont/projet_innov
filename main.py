@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, List
 
 class UserProfile(BaseModel):
     uname: Optional[str] = Field(description="Nom de l'utilisateur", default=None)
@@ -10,6 +10,18 @@ class UserProfile(BaseModel):
     uweight: Optional[int] = Field(description="Poids de l'utilisateur en kg", default=None)
     uheight: Optional[int] = Field(description="Taille de l'utilisateur en cm", default=None)
     ugoal: Optional[str] = Field(description="Objectif de l'utilisateur (prendre du muscle, perdre du poids...)", default=None)
+    uallergies: List[str] = Field(
+        description="Liste des allergies alimentaires ou autres", 
+        default_factory=list
+    )
+    uconditions: List[str] = Field(
+        description="Maladies ou conditions médicales existantes", 
+        default_factory=list
+    )
+    umedications: List[str] = Field(
+        description="Traitements ou médicaments pris actuellement", 
+        default_factory=list
+    )
 
 class DailyIntake(BaseModel):
     kcal: Optional[int] = Field(description="Calories consommées dans la journée en kcal", default=None)
@@ -73,7 +85,11 @@ prompt_coach = ChatPromptTemplate.from_messages([
     (
         "system", 
         "Tu es un coach expert en nutrition et sport. "
-        "Ton rôle est d'analyser le profil, la consommation et l'activité de l'utilisateur pour lui donner un conseil personnalisé."
+        "Ton rôle est d'analyser le profil (incluant l'âge, le poids, les allergies et conditions médicales), la consommation et l'activité de l'utilisateur pour lui donner un conseil personnalisé."
+        "RÈGLES CRITIQUES :\n"
+        "1. Priorité Santé : Si une activité ou un aliment est incompatible avec une allergie, une maladie ou un médicament listé, tu DOIS le signaler immédiatement.\n"
+        "2. Ton : Encourageant mais professionnel.\n"
+        "3. Précision : Ne donne pas de conseils génériques ; utilise les métriques (poids, taille, calories) pour tes recommandations."
     ),
     (
         "user", 
@@ -93,7 +109,7 @@ chain_coach = prompt_coach | llm
 
 # Exécution du script
 try:
-    print("Bonjour je suis votre assistant perso.\nCommencez par me décrire un peu votre profil. Donnez moi les informations suivantes:\n- Nom d'utilisateur\n- Votre age\n- Votre taille\n- Votre poids\n- Votre objectif (perdre du poids / prendre du muscle...)")
+    print("Bonjour je suis votre assistant perso.\nCommencez par me décrire un peu votre profil. Donnez moi les informations suivantes:\n- Nom d'utilisateur\n- Votre age\n- Votre taille\n- Votre poids\n- Votre objectif (perdre du poids / prendre du muscle...)\n- Santé:\n- Avez-vous des allergies ?\n- Souffrez-vous de maladies ou conditions médicales particulières ?\n- Prenez-vous des médicaments actuellement ?")
     user_input = input("Entrez votre réponse:")
     response1 = chain1.invoke({
         "domaine": "nutrition et sports",
@@ -121,13 +137,16 @@ try:
     print(f"\nPROFIL :")
     print(f"- Objectif : {response1.ugoal or 'Non précisé'}")
     print(f"- Physique : {response1.uheight or '??'} cm | {response1.uweight or '??'} kg")
+    print(f"- Santé    : Allergies: {response1.uallergies or 'Non précisé'} ")
+    print(f"             Conditions: {response1.uconditions or 'Non précisé'} ")
+    print(f"             Traitements: {response1.umedications or 'Non précisé'} ")
 
     print(f"\nCONSOMMATION ESTIMÉE :")
     print(f"- Énergie   : {response2.kcal or 0} kcal")
     print(f"- Protéines : {response2.prot or 0} g")
     print(f"- Glucides  : {response2.glucides or 0} g")
     print(f"- Lipides   : {response2.lipides or 0} g")
-    print(f"- Eau       : {response2.eau or 0} L")
+    print(f"- Eau       : {response2.eau or 0} L | {response2.eau or 0} cl | {response2.eau or 0} ml")
 
     print(f"\nACTIVITÉ PHYSIQUE :")
     print(f"- Calories dépensées : {response3.kcal or 0} kcal")
