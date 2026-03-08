@@ -108,67 +108,68 @@ chain3 = prompt3 | structured_llm3
 chain_coach = prompt_coach | llm
 
 # Exécution du script
-try:
-    print("Bonjour je suis votre assistant perso.\nCommencez par me décrire un peu votre profil. Donnez moi les informations suivantes:\n- Nom d'utilisateur\n- Votre age\n- Votre taille\n- Votre poids\n- Votre objectif (perdre du poids / prendre du muscle...)\n- Santé:\n- Avez-vous des allergies ?\n- Souffrez-vous de maladies ou conditions médicales particulières ?\n- Prenez-vous des médicaments actuellement ?")
-    user_input = input("Entrez votre réponse:")
-    response1 = chain1.invoke({
-        "domaine": "nutrition et sports",
-        "question": user_input
-    })
+if __name__ == "__main__":
+    try:
+        print("Bonjour je suis votre assistant perso.\nCommencez par me décrire un peu votre profil. Donnez moi les informations suivantes:\n- Nom d'utilisateur\n- Votre age\n- Votre taille\n- Votre poids\n- Votre objectif (perdre du poids / prendre du muscle...)\n- Santé:\n- Avez-vous des allergies ?\n- Souffrez-vous de maladies ou conditions médicales particulières ?\n- Prenez-vous des médicaments actuellement ?")
+        user_input = input("Entrez votre réponse:")
+        response1 = chain1.invoke({
+            "domaine": "nutrition et sports",
+            "question": user_input
+        })
 
-    print(f"\n\nTrès bien {response1.uname}. Maintenant décrivez moi avec précision tout ce que vous avez mangé et bu aujourd'hui.")
-    user_input = input("Entrez votre réponse:")
-    response2 = chain2.invoke({
-        "domaine": "nutrition et sports",
-        "question": user_input
-    })
+        print(f"\n\nTrès bien {response1.uname}. Maintenant décrivez moi avec précision tout ce que vous avez mangé et bu aujourd'hui.")
+        user_input = input("Entrez votre réponse:")
+        response2 = chain2.invoke({
+            "domaine": "nutrition et sports",
+            "question": user_input
+        })
 
-    print(f"\n\nD'accord {response1.uname}. Maintenant décrivez moi avec précision toute activité physique que vous avez fait aujourd'hui.")
-    user_input = input("Entrez votre réponse:")
-    response3 = chain3.invoke({
-        "domaine": "nutrition et sports",
-        "question": user_input
-    })
+        print(f"\n\nD'accord {response1.uname}. Maintenant décrivez moi avec précision toute activité physique que vous avez fait aujourd'hui.")
+        user_input = input("Entrez votre réponse:")
+        response3 = chain3.invoke({
+            "domaine": "nutrition et sports",
+            "question": user_input
+        })
 
-    print("\n" + "="*40)
-    print(f"RÉSUMÉ QUOTIDIEN POUR {response1.uname or 'Utilisateur'}")
-    print("="*40)
+        print("\n" + "="*40)
+        print(f"RÉSUMÉ QUOTIDIEN POUR {response1.uname or 'Utilisateur'}")
+        print("="*40)
 
-    print(f"\nPROFIL :")
-    print(f"- Objectif : {response1.ugoal or 'Non précisé'}")
-    print(f"- Physique : {response1.uheight or '??'} cm | {response1.uweight or '??'} kg")
-    print(f"- Santé    : Allergies: {response1.uallergies or 'Non précisé'} ")
-    print(f"             Conditions: {response1.uconditions or 'Non précisé'} ")
-    print(f"             Traitements: {response1.umedications or 'Non précisé'} ")
+        print(f"\nPROFIL :")
+        print(f"- Objectif : {response1.ugoal or 'Non précisé'}")
+        print(f"- Physique : {response1.uheight or '??'} cm | {response1.uweight or '??'} kg")
+        print(f"- Santé    : Allergies: {response1.uallergies or 'Non précisé'} ")
+        print(f"             Conditions: {response1.uconditions or 'Non précisé'} ")
+        print(f"             Traitements: {response1.umedications or 'Non précisé'} ")
 
-    print(f"\nCONSOMMATION ESTIMÉE :")
-    print(f"- Énergie   : {response2.kcal or 0} kcal")
-    print(f"- Protéines : {response2.prot or 0} g")
-    print(f"- Glucides  : {response2.glucides or 0} g")
-    print(f"- Lipides   : {response2.lipides or 0} g")
-    print(f"- Eau       : {response2.eau or 0} L | {response2.eau or 0} cl | {response2.eau or 0} ml")
+        print(f"\nCONSOMMATION ESTIMÉE :")
+        print(f"- Énergie   : {response2.kcal or 0} kcal")
+        print(f"- Protéines : {response2.prot or 0} g")
+        print(f"- Glucides  : {response2.glucides or 0} g")
+        print(f"- Lipides   : {response2.lipides or 0} g")
+        print(f"- Eau       : {response2.eau or 0} L | {response2.eau or 0} cl | {response2.eau or 0} ml")
 
-    print(f"\nACTIVITÉ PHYSIQUE :")
-    print(f"- Calories dépensées : {response3.kcal or 0} kcal")
+        print(f"\nACTIVITÉ PHYSIQUE :")
+        print(f"- Calories dépensées : {response3.kcal or 0} kcal")
 
-    if response2.kcal is not None and response3.kcal is not None:
-        bilan = response2.kcal - response3.kcal
-        print(f"\nBILAN ÉNERGÉTIQUE : {bilan} kcal")
-    
-    print("\n" + "="*40)
+        if response2.kcal is not None and response3.kcal is not None:
+            bilan = response2.kcal - response3.kcal
+            print(f"\nBILAN ÉNERGÉTIQUE : {bilan} kcal")
 
-    print("Le coach réfléchis...")
+        print("\n" + "="*40)
 
-    response_coach = chain_coach.invoke({
-        "profil": response1.model_dump_json(),
-        "conso": response2.model_dump_json(),
-        "activite": response3.model_dump_json()
-    })
+        print("Le coach réfléchis...")
 
-    print("\nCONSEIL DE VOTRE COACH :")
-    print("-" * 30)
-    print(response_coach.content)
-    print("-" * 30)
+        response_coach = chain_coach.invoke({
+            "profil": response1.model_dump_json(),
+            "conso": response2.model_dump_json(),
+            "activite": response3.model_dump_json()
+        })
 
-except Exception as e:
-    print(f"Une erreur est survenue : {e}")
+        print("\nCONSEIL DE VOTRE COACH :")
+        print("-" * 30)
+        print(response_coach.content)
+        print("-" * 30)
+
+    except Exception as e:
+        print(f"Une erreur est survenue : {e}")

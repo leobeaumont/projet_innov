@@ -261,11 +261,32 @@ class CoachApp(tk.Tk):
 
         tk.Frame(card, bg=CARD_BORDER, height=1).pack(fill="x", padx=14)
 
-        tk.Label(card, text=text,
-                 bg=BUBBLE_BOT, fg=TEXT_BOT,
-                 font=(FONT_FAMILY, 12),
-                 wraplength=640, justify="left",
-                 padx=14, pady=10).pack(anchor="w")
+        txt = tk.Text(
+            card,
+            bg=BUBBLE_BOT, fg=TEXT_BOT,
+            font=(FONT_FAMILY, 12),
+            relief="flat", wrap="word",
+            padx=14, pady=10,
+            width=60, height=1,          # height will be adjusted below
+            state="normal",
+            cursor="arrow",
+        )
+        txt.tag_configure("bold", font=(FONT_FAMILY, 12, "bold"))
+
+        # Parse **...** and insert with/without bold tag
+        import re
+        parts = re.split(r'\*\*(.*?)\*\*', text)
+        for i, part in enumerate(parts):
+            if i % 2 == 1:              # odd indices are the bold segments
+                txt.insert("end", part, "bold")
+            else:
+                txt.insert("end", part)
+
+        # Fit height to content
+        txt.update_idletasks()
+        line_count = int(txt.index("end-1c").split(".")[0])
+        txt.config(height=line_count, state="disabled")
+        txt.pack(anchor="w", fill="x", padx=0, pady=0)
 
         self._scroll_bottom()
 
