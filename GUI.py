@@ -3,23 +3,23 @@ from tkinter import font as tkfont
 import threading
 
 # ── Colours & style constants ──────────────────────────────────────────────
-BG          = "#181825"   # dark background
-SIDEBAR_BG  = "#3B7651"
-BUBBLE_BOT  = "#313244"   # assistant bubble
-BUBBLE_USR  = "#313244"   # user bubble  (Catppuccin blue)
-TEXT_BOT    = "#cdd6f4"
-TEXT_USR    = "#1e1e2e"
-ACCENT      = "#89b4fa"
-INPUT_BG    = "#313244"
-INPUT_FG    = "#cdd6f4"
-SEND_BG     = "#89b4fa"
-SEND_FG     = "#3C8952"
-CARD_BG     = "#181825"
-CARD_BORDER = "#45475a"
-GREEN       = "#a6e3a1"
-YELLOW      = "#f9e2af"
-PEACH       = "#fab387"
-MAUVE       = "#cba6f7"
+BG          = "#F5F7FA"   # very light neutral background
+SIDEBAR_BG  = "#2F3E46"   # dark slate for header/footer
+BUBBLE_BOT  = "#FFFFFF"   # assistant bubble (white)
+BUBBLE_USR  = "#E6F0FF"   # user bubble (subtle blue)
+TEXT_BOT    = "#0F1720"   # primary text (dark)
+TEXT_USR    = "#0B2A97"   # user text (blue)
+ACCENT      = "#1F77B4"   # professional blue accent
+INPUT_BG    = "#FFFFFF"   # input background
+INPUT_FG    = "#0F1720"   # input foreground
+SEND_BG     = "#1F77B4"   # send button background
+SEND_FG     = "#FFFFFF"   # send button text
+CARD_BG     = "#FFFFFF"   # cards / panels background
+CARD_BORDER = "#DCE2EA"   # subtle card border
+GREEN       = "#2CA02C"
+YELLOW      = "#FFB703"
+PEACH       = "#FF7F0E"
+MAUVE       = "#6A51A3"
 
 FONT_FAMILY = "Helvetica"
 
